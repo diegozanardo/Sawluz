@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Sawlux.ViewModel.PratoVM>
+
+<p>
+    <div class="form-horizontal">
+        <h4>Pratos</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-10">
+                @Html.ActionLink("Cadastrar novo prato", "Cadastro")
+            </div>
+        </div>
+    </div>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Restaurante)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Preco)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Restaurante)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Preco)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Cadastro", new { id=item.Id }) |
+            @Html.ActionLink("Deletar", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
