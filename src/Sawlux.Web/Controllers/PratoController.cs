@@ -1,4 +1,5 @@
 ﻿using Sawlux.Data.Contexto;
+using Sawlux.Data.Repositorios;
 using Sawlux.Service.Services;
 using Sawlux.ViewModel;
 using Sawluz.Model;
@@ -13,20 +14,25 @@ namespace Sawlux.Web.Controllers
     public class PratoController : Controller
     {
         readonly SawluxContexto contexto;
-        readonly PratoService pratoService;
-        readonly RestauranteService restauranteService;
+        readonly IPratoService pratoService;
+        readonly IRestauranteService restauranteService;
 
         public PratoController()
         {
+            //TODO: Implementar Unity para DI
             contexto = new SawluxContexto();
-            pratoService = new PratoService(contexto);
-            restauranteService = new RestauranteService(contexto);
+            var repo = new PratoRepositorio(contexto);
+            var repoRestaurante = new RestauranteRepositorio(contexto);
+            restauranteService = new RestauranteService(repoRestaurante);
+
+            pratoService = new PratoService(repo, restauranteService);
         }
         // GET: Prato
         public ActionResult Index()
         {
             var pratos = pratoService.GetAll().ToList();
             var pratosVM = new List<PratoVM>();
+            //TODO: Implmentar auto mapper
             foreach (var prato in pratos)
             {
                 pratosVM.Add(
@@ -48,6 +54,7 @@ namespace Sawlux.Web.Controllers
             if (id > 0)
             {
                 prato = pratoService.Get(x => x.Id == id).FirstOrDefault();
+                //TODO: Implmentar auto mapper
                 pratoVM = new PratoCadastroVM
                 {
                     Nome = prato.Nome,
@@ -79,21 +86,13 @@ namespace Sawlux.Web.Controllers
                 var prato = new Prato();
                 int restauranteId;
                 int.TryParse(pratoVM.Restaurante, out restauranteId);
-                var restaurante = restauranteService.Get(x => x.Id == restauranteId).FirstOrDefault();
-
-                if (pratoVM.Id > 0)
-                    prato = pratoService.Get(x => x.Id == pratoVM.Id).FirstOrDefault();
-
+                //TODO: Implmentar auto mapper
                 prato.Nome = pratoVM.Nome;
                 prato.Preco = pratoVM.Preco;
-                prato.Restaurante = restaurante;
+                prato.Id = pratoVM.Id;
 
-                if (pratoVM.Id > 0)
-                    pratoService.Update(prato);
-                else
-                    pratoService.Add(prato);
+                pratoService.Cadastro(prato, restauranteId);
 
-                pratoService.Save();
                 return RedirectToAction("Index");
             }
             return View(pratoVM);

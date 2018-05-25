@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace Sawlux.Service.Base
 {
-    public abstract class ServiceBase<TEntity> : IDisposable, IRepositorio<TEntity> where TEntity : class
+    public abstract class ServiceBase<TEntity> : IServiceBase<TEntity>, IRepositorio<TEntity> where TEntity : class
     {
-        protected RepositorioBase<TEntity> repository;
+        protected IRepositorioBase<TEntity> repository;
 
-        public ServiceBase(RepositorioBase<TEntity> repository)
+        public ServiceBase(IRepositorioBase<TEntity> repository)
         {
             this.repository = repository;
         }
@@ -60,9 +60,5 @@ namespace Sawlux.Service.Base
             repository.Delete(predicate);
         }
 
-        public void Dispose()
-        {
-            repository.Dispose();
-        }
     }
 }

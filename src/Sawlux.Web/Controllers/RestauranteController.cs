@@ -1,4 +1,5 @@
 ﻿using Sawlux.Data.Contexto;
+using Sawlux.Data.Repositorios;
 using Sawlux.Service.Services;
 using Sawlux.ViewModel;
 using Sawluz.Model;
@@ -11,12 +12,14 @@ namespace Sawlux.Web.Controllers
     public class RestauranteController : Controller
     {
         readonly SawluxContexto contexto;
-        readonly RestauranteService restauranteService;
+        readonly IRestauranteService restauranteService;
 
         public RestauranteController()
         {
+            //TODO: Implementar Unity para DI
             contexto = new SawluxContexto();
-            restauranteService = new RestauranteService(contexto);
+            var repo = new RestauranteRepositorio(contexto);
+            restauranteService = new RestauranteService(repo);
         }
         // GET: Restaurante
         public ActionResult Index(string restaurante)
@@ -30,6 +33,7 @@ namespace Sawlux.Web.Controllers
             var restaurantesVM = new List<RestauranteVM>();
             foreach (var restauranteModel in restaurantes)
             {
+                //TODO: Implmentar auto mapper
                 restaurantesVM.Add(new RestauranteVM
                 {
                     Nome = restauranteModel.Nome,
@@ -45,6 +49,7 @@ namespace Sawlux.Web.Controllers
             if (id > 0)
                 restaurante = restauranteService.Get(x => x.Id == id).FirstOrDefault();
 
+            //TODO: Implmentar auto mapper
             var restauranteVM = new RestauranteVM { Nome = restaurante.Nome, Id = restaurante.Id };
             return View(restauranteVM);
         }
@@ -54,18 +59,13 @@ namespace Sawlux.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                //TODO: Implmentar auto mapper
                 var restaurante = new Restaurante();
-                if (restauranteVM.Id > 0)
-                    restaurante = restauranteService.Get(x => x.Id == restauranteVM.Id).FirstOrDefault();
-
                 restaurante.Nome = restauranteVM.Nome;
+                restaurante.Id = restauranteVM.Id;
 
-                if (restauranteVM.Id > 0)
-                    restauranteService.Update(restaurante);
-                else
-                    restauranteService.Add(restaurante);
+                restauranteService.Cadastro(restaurante);
 
-                restauranteService.Save();
                 return RedirectToAction("Index");
             }
             return View(restauranteVM);

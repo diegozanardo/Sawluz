@@ -4,7 +4,7 @@ using Sawluz.Model;
 
 namespace Sawlux.Data.Repositorios
 {
-    public class RestauranteRepositorio : RepositorioBase<Restaurante>
+    public class RestauranteRepositorio : RepositorioBase<Restaurante>, IRestauranteRepositorio
     {
         public RestauranteRepositorio(SawluxContexto repo)
             : base(repo)

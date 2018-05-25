@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Sawlux.Data.Base
 {
-   public abstract class RepositorioBase<TEntity> : IDisposable, IRepositorio<TEntity> where TEntity : class
+   public abstract class RepositorioBase<TEntity> : IRepositorioBase<TEntity>, IDisposable, IRepositorio<TEntity> where TEntity : class
     {
         protected SawluxContexto ctx;
 
