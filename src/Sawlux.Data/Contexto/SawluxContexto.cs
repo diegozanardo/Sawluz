@@ -1,6 +1,7 @@
 ﻿using Sawluz.Model;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
@@ -18,6 +19,11 @@ namespace Sawlux.Data.Contexto
             : base("Sawlux")
         {
             Database.SetInitializer<SawluxContexto>(null);
+        }
+
+        public SawluxContexto(DbConnection connection)
+            : base(connection, true)
+        {
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
